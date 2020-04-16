@@ -50,7 +50,7 @@ class App extends Component {
     // }
 
     const onboard = Onboard({
-      dappId: process.env.BLOCKNATIVE_API_KEY,       // [String] The API key created by step one above
+      dappId: '5faf9ea3-b2d4-4123-84f8-1dc3014acf92',       // [String] The API key created by step one above
       networkId: 3,  // [Integer] The Ethereum network ID your Dapp uses.
       subscriptions: {
         wallet: wallet => {
