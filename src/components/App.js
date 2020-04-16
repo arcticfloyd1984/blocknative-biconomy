@@ -4,6 +4,7 @@ import Transaction from '../abis/Transaction.json';
 import logo from '../logo.png';
 import './App.css';
 import Main from './Main';
+import Onboard from 'bnc-onboard'
 
 class App extends Component {
 
@@ -21,6 +22,7 @@ class App extends Component {
     const ethBalance = await web3.eth.getBalance(this.state.account);
     this.setState({ ethBalance });
 
+
     const networkId = await web3.eth.net.getId();
 
     const transactionContractData = Transaction.networks[networkId];
@@ -36,16 +38,30 @@ class App extends Component {
   }
 
   async loadWeb3() {
-    if(window.ethereum) {
-      window.web3 = new Web3(window.ethereum);
-      await window.ethereum.enable();
-    } 
-    else if(window.web3) {
-      window.web3 = new Web3(window.web3.currentProvider);
-    }
-    else {
-      window.alert('Non-Ethereum browser detected, please install metamask');
-    }
+    // if(window.ethereum) {
+    //   window.web3 = new Web3(window.ethereum);
+    //   await window.ethereum.enable();
+    // } 
+    // else if(window.web3) {
+    //   window.web3 = new Web3(window.web3.currentProvider);
+    // }
+    // else {
+    //   window.alert('Non-Ethereum browser detected, please install metamask');
+    // }
+
+    const onboard = Onboard({
+      dappId: process.env.BLOCKNATIVE_API_KEY,       // [String] The API key created by step one above
+      networkId: 3,  // [Integer] The Ethereum network ID your Dapp uses.
+      subscriptions: {
+        wallet: wallet => {
+           window.web3 = new Web3(wallet.provider)
+        }
+      }
+    });
+
+    await onboard.walletSelect();
+    await onboard.walletCheck();
+
   }
 
   constructor(props) {
