@@ -3,10 +3,9 @@ pragma solidity ^0.5.0;
 contract Transaction {
     
     string public name = "Transaction Contract";
-    uint public counter = 0;
+    string public variableName = "";
     
-    function increaseCounter(uint _increment) public returns(uint) {
-        counter = counter + _increment;
-        return counter;
+    function changeName(string memory _name) public {
+        variableName = _name;
     }
 }
