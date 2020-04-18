@@ -4,7 +4,14 @@ import Transaction from '../abis/Transaction.json';
 import logo from '../logo.png';
 import './App.css';
 import Main from './Main';
-import Onboard from 'bnc-onboard'
+import Onboard from 'bnc-onboard';
+import Biconomy from "@biconomy/mexa";
+
+const FORTMATIC_KEY = 'pk_test_EBBC135C6497F848';
+const PORTIS_KEY = '9e6ef3bb-ac3c-4563-87e8-59c316f30be6';
+const BICONOMY_DAPP_ID = '5e99a3c6667350123f4de8f2';
+const BICONOMY_API_KEY = 'c4jqSXD-2.1facdab2-fd80-43ed-8c09-5571dd4bcafb';
+let web3Provider;
 
 class App extends Component {
 
@@ -14,26 +21,33 @@ class App extends Component {
   }
 
   async loadBlockchainData() {
+
+    const biconomy = new Biconomy(web3Provider,{dappId: BICONOMY_DAPP_ID, apiKey: BICONOMY_API_KEY});
     const web3 = window.web3;
+    biconomy.onEvent(biconomy.READY, async () => {
+      // Initialize your dapp here like getting user accounts etc
+        const accounts = await web3.eth.getAccounts();
+        this.setState({ account: accounts[0]});
 
-    const accounts = await web3.eth.getAccounts();
-    this.setState({ account: accounts[0]});
-
-    const ethBalance = await web3.eth.getBalance(this.state.account);
-    this.setState({ ethBalance });
+        const ethBalance = await web3.eth.getBalance(this.state.account);
+        this.setState({ ethBalance });
 
 
-    const networkId = await web3.eth.net.getId();
+        const networkId = await web3.eth.net.getId();
 
-    const transactionContractData = Transaction.networks[networkId];
-    if(transactionContractData) {
-      const transactionContract = new web3.eth.Contract(Transaction.abi, transactionContractData.address);
-      this.setState({ transactionContract });
-    } else {
-      window.alert('Transaction contract not deployed on this network');
-    }
+        const transactionContractData = Transaction.networks[networkId];
+        if(transactionContractData) {
+          const transactionContract = new web3.eth.Contract(Transaction.abi, transactionContractData.address);
+          this.setState({ transactionContract });
+        } else {
+          window.alert('Transaction contract not deployed on this network');
+        }
+    }).onEvent(biconomy.ERROR, (error, message) => {
+      // Handle error while initializing mexa
+      console.log(error);
+    });    
 
-    this.setState({ loading: false })
+    this.setState({ loading: false });
 
   }
 
@@ -54,8 +68,29 @@ class App extends Component {
       networkId: 3,  // [Integer] The Ethereum network ID your Dapp uses.
       subscriptions: {
         wallet: wallet => {
-           window.web3 = new Web3(wallet.provider)
+           window.web3 = new Web3(wallet.provider); 
+           web3Provider = wallet.provider;
         }
+      },
+      walletSelect: {
+        wallets : [
+          // { walletName: "coinbase", preferred: true }, // Will not work on desktop and only on mobile
+          { walletName: "metamask", preferred: true },
+          { walletName: "dapper", preferred: true },
+          {
+            walletName: "fortmatic",
+            apiKey: FORTMATIC_KEY,
+            preferred: true
+          },
+          {
+            walletName: "portis",
+            apiKey: PORTIS_KEY,
+            preferred: true,
+            label: 'Portis'
+          },
+          // { walletName: "opera" },
+          // { walletName: "torus" },
+        ]
       }
     });
 
