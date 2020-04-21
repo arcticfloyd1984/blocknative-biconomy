@@ -1,14 +1,10 @@
 import React, { Component } from 'react';
 import Web3 from 'web3';
 import Transaction from '../abis/Transaction.json';
-import logo from '../logo.png';
 import './App.css';
 import Main from './Main';
-import Onboard from 'bnc-onboard';
 import Biconomy from "@biconomy/mexa";
 
-const FORTMATIC_KEY = 'pk_test_EBBC135C6497F848';
-const PORTIS_KEY = '9e6ef3bb-ac3c-4563-87e8-59c316f30be6';
 const BICONOMY_DAPP_ID = '5e99a3c6667350123f4de8f2';
 const BICONOMY_API_KEY = 'c4jqSXD-2.1facdab2-fd80-43ed-8c09-5571dd4bcafb';
 let web3Provider;
@@ -51,35 +47,7 @@ class App extends Component {
   }
 
   async loadWeb3() {
-    const onboard = Onboard({
-      dappId: '5faf9ea3-b2d4-4123-84f8-1dc3014acf92',       
-      networkId: 3, 
-      subscriptions: {
-        wallet: wallet => {
-           web3Provider = wallet.provider;
-        }
-      },
-      walletSelect: {
-        wallets : [
-          { walletName: "metamask", preferred: true },
-          { walletName: "dapper", preferred: true },
-          {
-            walletName: "fortmatic",
-            apiKey: FORTMATIC_KEY,
-            preferred: true
-          },
-          {
-            walletName: "portis",
-            apiKey: PORTIS_KEY,
-            preferred: true,
-            label: 'Portis'
-          },
-        ]
-      }
-    });
-
-    await onboard.walletSelect();
-    await onboard.walletCheck();
+      web3Provider = window.web3.currentProvider || window.ethereum;
   }
 
   constructor(props) {
