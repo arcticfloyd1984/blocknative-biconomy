@@ -22,10 +22,10 @@ class App extends Component {
 
   async loadBlockchainData() {
 
-    const biconomy = new Biconomy(web3Provider,{dappId: BICONOMY_DAPP_ID, apiKey: BICONOMY_API_KEY});
+    const biconomy = new Biconomy(web3Provider,{dappId: BICONOMY_DAPP_ID, apiKey: BICONOMY_API_KEY, debug: true});
+    window.web3 = new Web3(biconomy);
     const web3 = window.web3;
     biconomy.onEvent(biconomy.READY, async () => {
-      // Initialize your dapp here like getting user accounts etc
         const accounts = await web3.eth.getAccounts();
         this.setState({ account: accounts[0]});
 
@@ -43,8 +43,7 @@ class App extends Component {
           window.alert('Transaction contract not deployed on this network');
         }
     }).onEvent(biconomy.ERROR, (error, message) => {
-      // Handle error while initializing mexa
-      console.log(error);
+      console.log(message);
     });    
 
     this.setState({ loading: false });
@@ -52,29 +51,16 @@ class App extends Component {
   }
 
   async loadWeb3() {
-    // if(window.ethereum) {
-    //   window.web3 = new Web3(window.ethereum);
-    //   await window.ethereum.enable();
-    // } 
-    // else if(window.web3) {
-    //   window.web3 = new Web3(window.web3.currentProvider);
-    // }
-    // else {
-    //   window.alert('Non-Ethereum browser detected, please install metamask');
-    // }
-
     const onboard = Onboard({
-      dappId: '5faf9ea3-b2d4-4123-84f8-1dc3014acf92',       // [String] The API key created by step one above
-      networkId: 3,  // [Integer] The Ethereum network ID your Dapp uses.
+      dappId: '5faf9ea3-b2d4-4123-84f8-1dc3014acf92',       
+      networkId: 3, 
       subscriptions: {
         wallet: wallet => {
-           window.web3 = new Web3(wallet.provider); 
            web3Provider = wallet.provider;
         }
       },
       walletSelect: {
         wallets : [
-          // { walletName: "coinbase", preferred: true }, // Will not work on desktop and only on mobile
           { walletName: "metamask", preferred: true },
           { walletName: "dapper", preferred: true },
           {
@@ -88,15 +74,12 @@ class App extends Component {
             preferred: true,
             label: 'Portis'
           },
-          // { walletName: "opera" },
-          // { walletName: "torus" },
         ]
       }
     });
 
     await onboard.walletSelect();
     await onboard.walletCheck();
-
   }
 
   constructor(props) {
@@ -105,7 +88,6 @@ class App extends Component {
       account: '',
       ethBalance: '0',
       transactionContract: {},
-      nameValue: '',
       loading: true
     }
   }
@@ -117,18 +99,6 @@ class App extends Component {
     })
   }
 
-  nameValue = () => {
-    this.setState({ loading: true });
-    this.state.transactionContract.methods.variableName().call((err, result) => {
-      if(err) {
-        window.alert('Error in retrieving counter value');
-      } else {
-        this.setState({ nameValue: result });
-        this.setState({ loading: false });
-      }
-    })
-  }
-
   render() {
     let content;
 
@@ -137,8 +107,7 @@ class App extends Component {
     } else {
       content = <Main 
         ethBalance = {this.state.ethBalance}
-        changeName =  {this.changeName}
-        nameValue = {this.state.nameValue}       
+        changeName =  {this.changeName}     
       />
     }
     return (
