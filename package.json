@@ -4,7 +4,7 @@
   "description": "A testing platform",
   "author": "yashasvichaudhry98@gmail.com",
   "dependencies": {
-    "@biconomy/mexa": "^1.5.5",
+    "@biconomy/mexa": "file:../mexa-sdk",
     "@truffle/hdwallet-provider": "^1.0.34",
     "babel-polyfill": "6.26.0",
     "babel-preset-env": "1.7.0",
@@ -12,7 +12,7 @@
     "babel-preset-stage-2": "6.24.1",
     "babel-preset-stage-3": "6.24.1",
     "babel-register": "6.26.0",
-    "bnc-onboard": "^1.7.5",
+    "bnc-onboard": "^1.7.6",
     "bootstrap": "4.3.1",
     "chai": "4.2.0",
     "chai-as-promised": "7.1.1",
