@@ -6,47 +6,26 @@ import Main from './Main';
 import Biconomy from "@biconomy/mexa";
 
 const keys = require('../keys.js');
-
-let web3;
+let web3Provider;
 
 class App extends Component {
 
     async componentWillMount() {
+        await this.loadWeb3();
         await this.loadBlockchainData();
     }
 
     async loadBlockchainData() {
 
-        const biconomy = new Biconomy({
-            options: { dappId: keys.BICONOMY_DAPP_ID, apiKey: keys.BICONOMY_API_KEY, debug: true },
-            onboard: {
-                onboardDappId: keys.ONBOARD_DAPP_ID,
-                networkId: 3,
-                subscriptions: {
-                    wallet: wallet => {
-                        console.log(wallet.provider);
-                        web3 = new Web3(wallet.provider);
-                    }
-                },
-                wallets: [
-                    { walletName: "metamask", preferred: true },
-                    { walletName: "dapper", preferred: true },
-                    {
-                        walletName: "fortmatic",
-                        apiKey: keys.FORTMATIC_KEY,
-                        preferred: true
-                    },
-                    {
-                        walletName: "portis",
-                        apiKey: keys.PORTIS_KEY,
-                        preferred: true,
-                        label: 'Portis'
-                    },
-                ]
-            }
-        });
-        await biconomy.walletSelect();
-        await biconomy.walletCheck();
+        // const biconomy = new Biconomy(web3Provider, {
+        //     options: { dappId: keys.BICONOMY_DAPP_ID, apiKey: keys.BICONOMY_API_KEY, debug: true },
+        //     notifyOptions: { dappId: keys.BLOCKNATIVE_DAPP_ID, networkId: 3 }
+        // });
+
+        // const biconomy = new Biconomy(web3Provider, { dappId: '5e99a3c6667350123f4de8f2', apiKey: 'c4jqSXD-2.1facdab2-fd80-43ed-8c09-5571dd4bcafb', debug: true });
+
+        window.web3 = new Web3(biconomy);
+        const web3 = window.web3;
 
 
         biconomy.onEvent(biconomy.READY, async() => {
@@ -73,6 +52,17 @@ class App extends Component {
 
         this.setState({ loading: false });
 
+    }
+
+    async loadWeb3() {
+        if (window.ethereum) {
+            web3Provider = window.ethereum;
+            await window.ethereum.enable();
+        } else if (window.web3) {
+            web3Provider = window.web3.currentProvider;
+        } else {
+            window.alert('Non-Ethereum browser detected, please install MetaMask');
+        }
     }
 
     constructor(props) {
