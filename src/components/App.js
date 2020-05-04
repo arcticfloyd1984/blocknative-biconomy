@@ -20,7 +20,7 @@ class App extends Component {
         const biconomy = new Biconomy({
             options: { dappId: keys.BICONOMY_DAPP_ID, apiKey: keys.BICONOMY_API_KEY, debug: true },
             onboard: {
-                onboardDappId: keys.ONBOARD_DAPP_ID,
+                dappId: keys.BLOCKNATIVE_DAPP_ID,
                 networkId: 3,
                 subscriptions: {
                     wallet: wallet => {
@@ -45,6 +45,8 @@ class App extends Component {
                 ]
             }
         });
+
+
         await biconomy.walletSelect();
         await biconomy.walletCheck();
 
