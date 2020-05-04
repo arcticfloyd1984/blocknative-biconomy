@@ -17,10 +17,10 @@ class App extends Component {
 
     async loadBlockchainData() {
 
-        // const biconomy = new Biconomy(web3Provider, {
-        //     options: { dappId: keys.BICONOMY_DAPP_ID, apiKey: keys.BICONOMY_API_KEY, debug: true },
-        //     notifyOptions: { dappId: keys.BLOCKNATIVE_DAPP_ID, networkId: 3 }
-        // });
+        const biconomy = new Biconomy(web3Provider, {
+            options: { dappId: keys.BICONOMY_DAPP_ID, apiKey: keys.BICONOMY_API_KEY, debug: true },
+            notifyOptions: { dappId: keys.BLOCKNATIVE_DAPP_ID, networkId: 3 }
+        });
 
         // const biconomy = new Biconomy(web3Provider, { dappId: '5e99a3c6667350123f4de8f2', apiKey: 'c4jqSXD-2.1facdab2-fd80-43ed-8c09-5571dd4bcafb', debug: true });
 
