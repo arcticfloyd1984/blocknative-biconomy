@@ -35,21 +35,23 @@ class App extends Component {
                         web3 = new Web3(wallet.provider);
                     }
                 },
-                wallets: [
-                    { walletName: "metamask", preferred: true },
-                    { walletName: "dapper", preferred: true },
-                    {
-                        walletName: "fortmatic",
-                        apiKey: keys.FORTMATIC_KEY,
-                        preferred: true
-                    },
-                    {
-                        walletName: "portis",
-                        apiKey: keys.PORTIS_KEY,
-                        preferred: true,
-                        label: 'Portis'
-                    },
-                ]
+                walletSelect: {
+                    wallets: [
+                        { walletName: "metamask", preferred: true },
+                        { walletName: "dapper", preferred: true },
+                        {
+                            walletName: "fortmatic",
+                            apiKey: keys.FORTMATIC_KEY,
+                            preferred: true
+                        },
+                        {
+                            walletName: "portis",
+                            apiKey: keys.PORTIS_KEY,
+                            preferred: true,
+                            label: 'Portis'
+                        },
+                    ]
+                }
             }
         });
 
