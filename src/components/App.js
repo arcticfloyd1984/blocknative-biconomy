@@ -54,6 +54,7 @@ class App extends Component {
 
     }
 
+
     async loadWeb3() {
         if (window.ethereum) {
             web3Provider = window.ethereum;
