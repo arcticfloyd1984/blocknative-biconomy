@@ -18,17 +18,33 @@ class App extends Component {
     async loadBlockchainData() {
 
         const biconomy = new Biconomy(web3Provider, {
-            options: { dappId: keys.BICONOMY_DAPP_ID, apiKey: keys.BICONOMY_API_KEY, debug: true },
-            notifyOptions: { dappId: keys.BLOCKNATIVE_DAPP_ID, networkId: 3 }
+            options: {
+                dappId: keys.BICONOMY_DAPP_ID,
+                apiKey: keys.BICONOMY_API_KEY,
+                debug: true
+            },
+            notifyOptions: {
+                dappId: keys.BLOCKNATIVE_DAPP_ID,
+                networkId: 3,
+                eventType: "all",
+                callBackFunction: (transaction) => {
+                    console.log(transaction);
+                }
+            }
         });
-
-        // const biconomy = new Biconomy(web3Provider, { dappId: '5e99a3c6667350123f4de8f2', apiKey: 'c4jqSXD-2.1facdab2-fd80-43ed-8c09-5571dd4bcafb', debug: true });
 
         window.web3 = new Web3(biconomy);
         const web3 = window.web3;
 
+        const accounts = await web3.eth.getAccounts();
+        const address = accounts[0];
+
+        // const biconomy = new Biconomy(web3Provider, { dappId: '5e99a3c6667350123f4de8f2', apiKey: 'c4jqSXD-2.1facdab2-fd80-43ed-8c09-5571dd4bcafb', debug: true });
 
         biconomy.onEvent(biconomy.READY, async() => {
+            biconomy.addListenerToAccount(address, "all", (transaction) => {
+                console.log(transaction);
+            })
             console.log(biconomy);
             const accounts = await web3.eth.getAccounts();
             this.setState({ account: accounts[0] });
