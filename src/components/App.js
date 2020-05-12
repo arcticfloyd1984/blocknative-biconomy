@@ -26,10 +26,11 @@ class App extends Component {
             notifyOptions: {
                 dappId: keys.BLOCKNATIVE_DAPP_ID,
                 networkId: 3,
-                eventType: "all",
-                callBackFunction: (transaction) => {
-                    console.log(transaction);
-                }
+                desktopPosition: "bottomLeft",
+            },
+            notifyEventType: "all",
+            notifyCallBackFunction: (transaction) => {
+                console.log(transaction);
             }
         });
 
@@ -38,13 +39,13 @@ class App extends Component {
         window.web3 = new Web3(biconomy);
         const web3 = window.web3;
 
-        // const accounts = await web3.eth.getAccounts();
-        // const address = accounts[0];
+        const accounts = await web3.eth.getAccounts();
+        const address = accounts[0];
 
         biconomy.onEvent(biconomy.READY, async() => {
-            // biconomy.addListenerToAccount(address, "all", (transaction) => {
-            //     console.log(transaction);
-            // })
+            biconomy.addListenerToAccount(address, "all", (transaction) => {
+                console.log(transaction);
+            })
             console.log(biconomy);
             const accounts = await web3.eth.getAccounts();
             this.setState({ account: accounts[0] });
