@@ -24,14 +24,17 @@ class App extends Component {
                 debug: true
             },
             notifyOptions: {
-                dappId: keys.BLOCKNATIVE_DAPP_ID,
-                networkId: 3,
-                desktopPosition: "bottomLeft",
+                notifyParams: {
+                    dappId: keys.BLOCKNATIVE_DAPP_ID,
+                    networkId: 3,
+                    desktopPosition: "bottomLeft",
+                },
+                notifyEventOptions: { // notifyEventType: notifyCallBackFunction
+                    all: (transaction) => {
+                        console.log(transaction);
+                    }
+                }
             },
-            notifyEventType: "all",
-            notifyCallBackFunction: (transaction) => {
-                console.log(transaction);
-            }
         });
 
         // const biconomy = new Biconomy(web3Provider, { dappId: '5eb6ce6b02f28832e8db5707	', apiKey: 'c4jqSXD-2.1facdab2-fd80-43ed-8c09-5571dd4bcafb', debug: true });
@@ -42,10 +45,14 @@ class App extends Component {
         const accounts = await web3.eth.getAccounts();
         const address = accounts[0];
 
-        biconomy.onEvent(biconomy.READY, async() => {
-            biconomy.addListenerToAccount(address, "all", (transaction) => {
+        const notifyAddressEventOptions = {
+            all: (transaction) => {
                 console.log(transaction);
-            })
+            }
+        }
+
+        biconomy.onEvent(biconomy.READY, async() => {
+            biconomy.addListenerToAccount(address, notifyAddressEventOptions)
             console.log(biconomy);
             const accounts = await web3.eth.getAccounts();
             this.setState({ account: accounts[0] });
